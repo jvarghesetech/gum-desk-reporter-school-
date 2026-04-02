@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gum Report Admin System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0d1117;
+      min-height: 100vh;
+      color: #fff;
+    }
+    
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 180px;
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem 1.25rem;
+    }
+    
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #d4a017;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    
+    .sidebar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    
+    .nav-section {
+      padding: 1rem 0;
+    }
+    
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #6e7681;
+      text-transform: uppercase;
+      padding: 0 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 1.25rem;
+      color: #8b949e;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+    
+    .nav-item.active {
+      background: rgba(212, 160, 23, 0.15);
+      color: #d4a017;
+    }
+    
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1.25rem;
+      border-top: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: #d4a017;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+      color: #000;
+    }
+    
+    .user-info {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .user-role {
+      font-size: 11px;
+      color: #6e7681;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 180px;
+      min-height: 100vh;
+    }
+    
+    /* Page Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid #30363d;
+    }
+    
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #30363d;
+      color: #fff;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: #8b949e;
+    }
+    
+    .btn-primary {
+      background: #d4a017;
+      color: #000;
+    }
+    
+    .btn-primary:hover {
+      background: #e8b422;
+    }
+    
+    .btn-dark {
+      background: #21262d;
+      color: #fff;
+      border: 1px solid #30363d;
+    }
+    
+    .btn-dark:hover {
+      background: #30363d;
+    }
+    
+    /* Page Content */
+    .page-content {
+      padding: 2rem;
+    }
+    
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #1a1f2e 0%, #252d3a 100%);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(212, 160, 23, 0.1);
+      border-radius: 50%;
+    }
+    
+    .hero-badge {
+      display: inline-block;
+      background: #d4a017;
+      color: #000;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    
+    .hero-title-accent {
+      color: #d4a017;
+    }
+    
+    .hero-description {
+      color: #8b949e;
+      font-size: 14px;
+      max-width: 400px;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    /* Feature Cards */
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .feature-card {
+      background: #fffef5;
+      border-radius: 10px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-icon.yellow { background: #fef3c7; }
+    .feature-icon.teal { background: #d1fae5; }
+    .feature-icon.blue { background: #dbeafe; }
+    
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    
+    .feature-desc {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    /* Reports Section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .link-btn {
+      font-size: 13px;
+      color: #8b949e;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      cursor: pointer;
+      background: transparent;
+    }
+    
+    .link-btn:hover {
+      color: #fff;
+      border-color: #8b949e;
+    }
+    
+    /* Report Items */
+    .reports-list {
+      background: #fffef5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .report-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #f0efe5;
+    }
+    
+    .report-item:last-child {
+      border-bottom: none;
+    }
+    
+    .report-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 14px;
+    }
+    
+    .report-icon.pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .report-icon.resolved {
+      background: #d1fae5;
+      color: #059669;
+    }
+    
+    .report-info {
+      flex: 1;
+    }
+    
+    .report-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    
+    .report-meta {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    
+    .report-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    
+    .badge-gum { background: #fef3c7; color: #b45309; }
+    .badge-furniture { background: #dbeafe; color: #1d4ed8; }
+    .badge-graffiti { background: #ede9fe; color: #7c3aed; }
+    .badge-spill { background: #fce7f3; color: #be185d; }
+    .badge-pending { background: #fee2e2; color: #dc2626; }
+    .badge-resolved { background: #d1fae5; color: #059669; }
+    
+    /* Login Page */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 80px);
+    }
+    
+    .login-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .login-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #d4a017, #f0c040);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    
+    .login-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .login-subtitle {
+      color: #8b949e;
+      font-size: 14px;
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b949e;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-label .required {
+      color: #f87171;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .form-input:focus {
+      border-color: #d4a017;
+    }
+    
+    .form-input::placeholder {
+      color: #6e7681;
+    }
+    
+    .form-input.error {
+      border-color: #f87171;
+    }
+    
+    .error-message {
+      background: rgba(220, 38, 38, 0.15);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #f87171;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 1.25rem;
+    }
+    
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    /* Dashboard Page */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+    }
+    
+    .stat-card.warning .stat-value { color: #f59e0b; }
+    .stat-card.success .stat-value { color: #10b981; }
+    
+    /* Work Order Card */
+    .work-order-card {
+      background: linear-gradient(135deg, #1a1f2e 0%, #252d3a 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .work-order-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .work-order-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .work-order-meta {
+      font-size: 12px;
+      color: #8b949e;
+    }
+    
+    .work-order-badge {
+      background: #3b82f6;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    
+    .work-order-body {
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .issue-item {
+      margin-bottom: 1rem;
+    }
+    
+    .issue-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .issue-type {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #d4a017;
+      margin-bottom: 4px;
+    }
+    
+    .issue-desc {
+      font-size: 14px;
+      color: #c9d1d9;
+    }
+    
+    .issue-desc strong {
+      color: #fff;
+    }
+    
+    .work-order-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+      color: #6e7681;
+    }
+    
+    /* New Report Form */
+    .report-form-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .report-form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 60px;
+      }
+      
+      .sidebar-header,
+      .nav-section-label,
+      .user-info,
+      .nav-item span {
+        display: none;
+      }
+      
+      .nav-item {
+        justify-content: center;
+        padding: 12px;
+      }
+      
+      .sidebar-footer {
+        justify-content: center;
+      }
+      
+      .main-content {
+        margin-left: 60px;
+      }
+      
+      .feature-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-label">GUM REPORT</div>
+        <div class="sidebar-title">Admin System</div>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-section-label">Menu</div>
+        <div class="nav-item active" onclick="showPage('home')" id="nav-home">
+          <div class="nav-icon">🏠</div>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="showPage('newReport')" id="nav-newReport">
+          <div class="nav-icon">📝</div>
+          <span>New Report</span>
+        </div>
+      </nav>
+      
+      <nav class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        <div class="nav-item" onclick="showPage('login')" id="nav-login">
+          <div class="nav-icon">🔐</div>
+          <span>Admin Login</span>
+        </div>
+        <div class="nav-item" onclick="showPage('dashboard')" id="nav-dashboard">
+          <div class="nav-icon">📊</div>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showPage('print')" id="nav-print">
+          <div class="nav-icon">🖨️</div>
+          <span>Print View</span>
+        </div>
+      </nav>
+      
+      <div class="sidebar-footer" id="userFooter">
+        <div class="user-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="userName">Not logged in</div>
+          <div class="user-role" id="userRole">Guest</div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- HOME PAGE -->
+      <div id="page-home">
+        <header class="page-header">
+          <h1 class="page-title">Home</h1>
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="showPage('newReport')">+ New Report</button>
+            <button class="btn btn-primary" onclick="showPage('dashboard')">Dashboard</button>
+          </div>
+        </header>
+        
+        <div class="page-content">
+          <div class="hero">
+            <div class="hero-badge">Classroom Cleanliness Program</div>
+            <h2 class="hero-title">Keep Your School<br><span class="hero-title-accent">Clean & Proud</span></h2>
+            <p class="hero-description">Report gum under desks quickly. Custodians get instant, printable work orders for faster cleaning.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" onclick="showPage('newReport')">Submit a Report</button>
+              <button class="btn btn-dark" onclick="showPage('dashboard')">View Dashboard</button>
+            </div>
+          </div>
+          
+          <div class="feature-cards">
+            <div class="feature-card" onclick="showPage('newReport')">
+              <div class="feature-icon yellow">📋</div>
+              <div class="feature-title">Report Issue</div>
+              <div class="feature-desc">Flag gum under desks in your classroom</div>
+            </div>
+            <div class="feature-card" onclick="showPage('dashboard')">
+              <div class="feature-icon teal">📊</div>
+              <div class="feature-title">Dashboard</div>
+              <div class="feature-desc">View all open reports and mark them resolved</div>
+            </div>
+            <div class="feature-card" onclick="showPage('print')">
+              <div class="feature-icon blue">🖨️</div>
+              <div class="feature-title">Print Orders</div>
+              <div class="feature-desc">Generate custodian work orders for open issues</div>
+            </div>
+          </div>
+          
+          <div class="section-header">
+            <h3 class="section-title">Recent Reports</h3>
+            <button class="link-btn" onclick="showPage('dashboard')">See All →</button>
+          </div>
+          
+          <div class="reports-list" id="homeReportsList"></div>
+        </div>
+      </div>
+      
+      <!-- LOGIN PAGE -->
+      <div id="page-login" class="hidden">
+        <header class="page-header">
+          <h1 class="page-title">Admin Login</h1>
+        </header>
+        
+        <div class="page-content">
+          <div class="login-container">
+            <div class="login-card">
+              <div class="login-header">
+                <div class="login-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </div>
+                <h2 class="login-title">Admin Login</h2>
+                <p class="login-subtitle">Enter your credentials to access the dashboard</p>
+              </div>
+              
+              <div id="loginError" class="error-message hidden"></div>
+              
+              <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" id="username" placeholder="Enter username">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="password" placeholder="Enter password">
+              </div>
+              
+              <button class="btn btn-primary btn-login" onclick="login()">Sign In</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- DASHBOARD PAGE -->
+      <div id="page-dashboard" class="hidden">
+        <header class="page-header">
+          <h1 class="page-title">Dashboard</h1>
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="showPage('newReport')">+ New Report</button>
+            <button class="btn btn-primary" onclick="showPage('print')">🖨️ Print View</button>
+          </div>
+        </header>
+        
+        <div class="page-content">
+          <div id="dashboardContent"></div>
+        </div>
+      </div>
+      
+      <!-- NEW REPORT PAGE -->
+      <div id="page-newReport" class="hidden">
+        <header class="page-header">
+          <h1 class="page-title">New Report</h1>
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="showPage('home')">← Back</button>
+          </div>
+        </header>
+        
+        <div class="page-content">
+          <div class="report-form-card">
+            <h3 class="report-form-title">Report Gum Under Desk</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Desk Number/Name (Optional)</label>
+                <input type="text" class="form-input" id="deskInput" placeholder="e.g. Desk A-15, Table 3">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Room <span class="required">*</span></label>
+                <input type="text" class="form-input" id="roomInput" placeholder="e.g. Room 201, Library">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Reported By <span class="required">*</span></label>
+              <input type="text" class="form-input" id="reporterInput" placeholder="e.g. Ms. Johnson">
+            </div>
+            
+            <button class="btn btn-primary" onclick="addReport()">Submit Report</button>
+          </div>
+          
+          <div class="section-header">
+            <h3 class="section-title">Recent Reports</h3>
+          </div>
+          <div class="reports-list" id="newReportList"></div>
+        </div>
+      </div>
+      
+      <!-- PRINT PAGE -->
+      <div id="page-print" class="hidden">
+        <header class="page-header">
+          <h1 class="page-title">Print View</h1>
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="showPage('newReport')">+ New Report</button>
+            <button class="btn btn-primary" onclick="showPage('dashboard')">Dashboard</button>
+          </div>
+        </header>
+        
+        <div class="page-content">
+          <div class="section-header">
+            <h3 class="section-title">Custodian Work Orders</h3>
+            <button class="btn btn-primary" onclick="printReports()">🖨️ Print All</button>
+          </div>
+          <p style="color: #8b949e; margin-bottom: 1.5rem;"><span id="pendingPrintCount">0</span> pending issues to action</p>
+          
+          <div id="printWorkOrders"></div>
+        </div>
+      </div>
+      
+    </main>
+  </div>
+
+  <script>
+    // Data
+    let reports = JSON.parse(localStorage.getItem('gumReports')) || [
+      { id: 1, desk: 'Desk A-12', room: 'Room 101', reporter: 'Ms. Johnson', reportedAt: '2026-03-31 09:15', status: 'pending' },
+      { id: 2, desk: 'Desk B-03', room: 'Room 205', reporter: 'Mr. Patel', reportedAt: '2026-03-31 10:30', status: 'pending' },
+      { id: 3, desk: '', room: 'Room 103', reporter: 'Ms. Chen', reportedAt: '2026-03-30 14:22', status: 'cleaned' }
+    ];
+    
+    let isLoggedIn = false;
+    let currentPage = 'home';
+    
+    function saveReports() {
+      localStorage.setItem('gumReports', JSON.stringify(reports));
+    }
+    
+    // Navigation
+    function showPage(page) {
+      // Hide all pages
+      document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      // Check admin pages
+      if ((page === 'dashboard' || page === 'print') && !isLoggedIn) {
+        page = 'login';
+      }
+      
+      // Show selected page
+      document.getElementById('page-' + page).classList.remove('hidden');
+      document.getElementById('nav-' + page)?.classList.add('active');
+      currentPage = page;
+      
+      // Render content
+      renderReports();
+    }
+    
+    // Login
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('loginError');
+      
+      if (username === 'admin' && password === 'admin1*') {
+        isLoggedIn = true;
+        errorDiv.classList.add('hidden');
+        document.getElementById('userName').textContent = 'Admin';
+        document.getElementById('userRole').textContent = 'admin2024';
+        document.querySelector('.user-avatar').textContent = 'A';
+        showPage('dashboard');
+      } else {
+        errorDiv.textContent = 'Invalid username or password';
+        errorDiv.classList.remove('hidden');
+      }
+    }
+    
+    // Add report
+    function addReport() {
+      const desk = document.getElementById('deskInput').value.trim();
+      const room = document.getElementById('roomInput').value.trim();
+      const reporter = document.getElementById('reporterInput').value.trim();
+      
+      // Clear previous error styles
+      document.getElementById('roomInput').classList.remove('error');
+      document.getElementById('reporterInput').classList.remove('error');
+      
+      // Validate required fields
+      let hasError = false;
+      
+      if (!room) {
+        document.getElementById('roomInput').classList.add('error');
+        hasError = true;
+      }
+      
+      if (!reporter) {
+        document.getElementById('reporterInput').classList.add('error');
+        hasError = true;
+      }
+      
+      if (hasError) {
+        alert('Please fill in the required fields: Room and Reported By');
+        return;
+      }
+      
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 16).replace('T', ' ');
+      
+      reports.unshift({
+        id: Date.now(),
+        desk: desk || '', // Optional - can be empty
+        room: room,
+        reporter: reporter,
+        reportedAt: dateStr,
+        status: 'pending'
+      });
+      
+      saveReports();
+      document.getElementById('deskInput').value = '';
+      document.getElementById('roomInput').value = '';
+      document.getElementById('reporterInput').value = '';
+      renderReports();
+      alert('Report submitted successfully!');
+    }
+    
+    // Mark cleaned
+    function markCleaned(id) {
+      const report = reports.find(r => r.id === id);
+      if (report) {
+        report.status = 'cleaned';
+        saveReports();
+        renderReports();
+      }
+    }
+    
+    // Delete report
+    function deleteReport(id) {
+      if (confirm('Delete this report?')) {
+        reports = reports.filter(r => r.id !== id);
+        saveReports();
+        renderReports();
+      }
+    }
+    
+    // Print
+    function printReports() {
+      const pending = reports.filter(r => r.status === 'pending');
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Custodian Work Orders</title>
+          <style>
+            body { font-family: -apple-system, sans-serif; padding: 30px; }
+            h1 { font-size: 24px; margin-bottom: 10px; }
+            .date { color: #666; margin-bottom: 30px; }
+            .order { border: 2px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; page-break-inside: avoid; }
+            .order-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+            .order-meta { color: #666; font-size: 13px; margin-bottom: 15px; }
+            .issue { margin-bottom: 10px; }
+            .issue-type { font-size: 11px; font-weight: bold; color: #b45309; text-transform: uppercase; margin-bottom: 4px; }
+            .checkbox { display: inline-block; width: 16px; height: 16px; border: 2px solid #333; margin-right: 10px; vertical-align: middle; }
+          </style>
+        </head>
+        <body>
+          <h1>🧹 Custodian Work Orders</h1>
+          <p class="date">Generated: ${new Date().toLocaleString()}</p>
+          ${pending.map(r => `
+            <div class="order">
+              <div class="order-title">Work Order — ${r.room}</div>
+              <div class="order-meta">${r.reporter} · ${r.reportedAt}</div>
+              <div class="issue">
+                <div class="issue-type">🧪 Gum Removal</div>
+                <p><span class="checkbox"></span> Check and remove gum from underneath ${r.desk ? `desk: <strong>${r.desk}</strong>` : 'desks in this room'}</p>
+              </div>
+            </div>
+          `).join('')}
+        </body>
+        </html>
+      `;
+      
+      const win = window.open('', '_blank');
+      win.document.write(printContent);
+      win.document.close();
+      win.print();
+    }
+    
+    // Render
+    function renderReports() {
+      const pending = reports.filter(r => r.status === 'pending');
+      const cleaned = reports.filter(r => r.status === 'cleaned');
+      
+      // Helper function to display desk info
+      const getDeskDisplay = (r) => {
+        return r.desk ? `${r.room} — ${r.desk}` : r.room;
+      };
+      
+      // Home page list
+      const homeList = document.getElementById('homeReportsList');
+      if (homeList) {
+        homeList.innerHTML = reports.slice(0, 5).map(r => `
+          <div class="report-item">
+            <div class="report-icon ${r.status === 'pending' ? 'pending' : 'resolved'}">
+              ${r.status === 'pending' ? '⚠️' : '✅'}
+            </div>
+            <div class="report-info">
+              <div class="report-title">${getDeskDisplay(r)}</div>
+              <div class="report-meta">${r.reporter} · ${r.reportedAt.split(' ')[0]}</div>
+            </div>
+            <div class="report-badges">
+              <span class="badge badge-gum">GUM</span>
+              <span class="badge badge-${r.status === 'pending' ? 'pending' : 'resolved'}">${r.status.toUpperCase()}</span>
+            </div>
+          </div>
+        `).join('') || '<div style="padding: 2rem; text-align: center; color: #9ca3af;">No reports yet</div>';
+      }
+      
+      // New report page list
+      const newReportList = document.getElementById('newReportList');
+      if (newReportList) {
+        newReportList.innerHTML = reports.slice(0, 3).map(r => `
+          <div class="report-item">
+            <div class="report-icon ${r.status === 'pending' ? 'pending' : 'resolved'}">
+              ${r.status === 'pending' ? '⚠️' : '✅'}
+            </div>
+            <div class="report-info">
+              <div class="report-title">${getDeskDisplay(r)}</div>
+              <div class="report-meta">${r.reporter} · ${r.reportedAt.split(' ')[0]}</div>
+            </div>
+            <div class="report-badges">
+              <span class="badge badge-gum">GUM</span>
+              <span class="badge badge-${r.status === 'pending' ? 'pending' : 'resolved'}">${r.status.toUpperCase()}</span>
+            </div>
+          </div>
+        `).join('') || '<div style="padding: 2rem; text-align: center; color: #9ca3af;">No reports yet</div>';
+      }
+      
+      // Dashboard
+      const dashboardContent = document.getElementById('dashboardContent');
+      if (dashboardContent && currentPage === 'dashboard') {
+        dashboardContent.innerHTML = `
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Reports</div>
+              <div class="stat-value">${reports.length}</div>
+            </div>
+            <div class="stat-card warning">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value">${pending.length}</div>
+            </div>
+            <div class="stat-card success">
+              <div class="stat-label">Cleaned</div>
+              <div class="stat-value">${cleaned.length}</div>
+            </div>
+          </div>
+          
+          <div class="section-header">
+            <h3 class="section-title">All Reports</h3>
+          </div>
+          
+          <div class="reports-list">
+            ${reports.map(r => `
+              <div class="report-item">
+                <div class="report-icon ${r.status === 'pending' ? 'pending' : 'resolved'}">
+                  ${r.status === 'pending' ? '⚠️' : '✅'}
+                </div>
+                <div class="report-info">
+                  <div class="report-title">${getDeskDisplay(r)}</div>
+                  <div class="report-meta">${r.reporter} · ${r.reportedAt}</div>
+                </div>
+                <div class="report-badges">
+                  <span class="badge badge-gum">GUM</span>
+                  ${r.status === 'pending' ? `<button class="btn btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="markCleaned(${r.id})">✓ Mark Cleaned</button>` : ''}
+                  <span class="badge badge-${r.status === 'pending' ? 'pending' : 'resolved'}">${r.status.toUpperCase()}</span>
+                  <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px; color: #f87171; border-color: #f87171;" onclick="deleteReport(${r.id})">✕</button>
+                </div>
+              </div>
+            `).join('') || '<div style="padding: 2rem; text-align: center; color: #9ca3af;">No reports yet</div>'}
+          </div>
+        `;
+      }
+      
+      // Print view
+      const printOrders = document.getElementById('printWorkOrders');
+      const pendingCount = document.getElementById('pendingPrintCount');
+      if (printOrders && currentPage === 'print') {
+        pendingCount.textContent = pending.length;
+        
+        // Group by room
+        const byRoom = {};
+        pending.forEach(r => {
+          if (!byRoom[r.room]) byRoom[r.room] = [];
+          byRoom[r.room].push(r);
+        });
+        
+        printOrders.innerHTML = Object.entries(byRoom).map(([room, items]) => `
+          <div class="work-order-card">
+            <div class="work-order-header">
+              <div>
+                <div class="work-order-title">Work Order — ${room}</div>
+                <div class="work-order-meta">${items[0].reporter} · ${items[0].reportedAt}</div>
+              </div>
+              <div class="work-order-badge">CUSTODIAN</div>
+            </div>
+            <div class="work-order-body">
+              ${items.map(r => `
+                <div class="issue-item">
+                  <div class="issue-type">🧪 GUM REMOVAL</div>
+                  <div class="issue-desc">Please check and remove gum from underneath ${r.desk ? `desk. <strong>${r.desk}</strong> reported.` : 'desks in this room.'}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="work-order-footer">
+              Classroom Cleanliness Program · ${new Date().toISOString().slice(0, 10)}
+            </div>
+          </div>
+        `).join('') || '<div style="padding: 2rem; text-align: center; color: #8b949e;">No pending work orders</div>';
+      }
+    }
+    
+    // Enter key login
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') login();
+    });
+    
+    // Initial render
+    renderReports();
+  </script>
+</body>
+</html>
