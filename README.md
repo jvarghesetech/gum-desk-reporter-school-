@@ -6,7 +6,7 @@ A simple, dark-themed web app for schools to track and manage gum removal reques
 
 ## 🌐 Live Demo
 
-👉 **[Try it here](https://johnvarghese.github.io/gum-desk-reporter/)**
+👉 **[Try it here](https://jvarghesetech.github.io/gum-desk-reporter-school-/)**
 
 ---
 
